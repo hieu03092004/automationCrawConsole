@@ -234,6 +234,6 @@ Cấu trúc data mong muốn trong file report/report.json sau khi hàm main tro
       }
     }
   }
-  
- 
+
+console.log("Hello World") 
 
