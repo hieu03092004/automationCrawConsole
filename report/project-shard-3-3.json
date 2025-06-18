@@ -1,0 +1,83 @@
+{
+  "projectName": "MyProject",
+  "buildNumber": 1750251957089,
+  "items-object": {
+    "https://www.gravityglobal.com/services": {
+      "chromium": {
+        "screenshot": "../images/33383761-chromium.png",
+        "logs": {
+          "info": [],
+          "warn": [
+            "TM3PrNsBvbAWHkIAKyuSG"
+          ],
+          "error": [
+            "INpWL8JcW41JzgVot5Txu",
+            "7mtCj0ZzBWecc4_vzRreg",
+            "QJm4TZgBChJSFYE4spHwv"
+          ]
+        }
+      },
+      "firefox": {
+        "screenshot": "../images/33383761-firefox.png",
+        "logs": {
+          "info": [
+            "1UyyIbLs8m5-ushTrnTVr",
+            "KLaPAhpahSsILtB5bO-0f",
+            "b5oX6ty_k5Fe5KkNnkIhl",
+            "WKzqbDmcri0_qyRTzSlWe",
+            "1W_Sg5fltQnW9hQzvZKrN",
+            "drHHxqo57urewPNLJ22c9",
+            "ql4v5CDMh2JzeucCkJBlw",
+            "n8VYooMz5onlQnD5g9DVy",
+            "4GJI4wHk703DV2-9etlaB",
+            "hIAZhad7LxAALdZl4XEi2",
+            "GtxB7jaxqsDxA3wGfNkvg",
+            "-C3Alk0exnZO3LXT9doGw",
+            "dQuZOn_Y9OOhc-yapTvow",
+            "ocvTZ1GUU7R63DNfLtA6X",
+            "1Q8_PMHlT1CsrmwKbl_qo",
+            "oBZd3bAX0deF8q6J2N5ZN",
+            "-b9H9I7t2FemPghbZZoqM",
+            "msHXiruANH0nQYA_CuFu_",
+            "rM0shewYimhjbU1jVZgn1",
+            "mYMbeGTOik69sYcMCCJ69",
+            "MzyGPifv52QnsbYKPI_Ro",
+            "_jhSlO8Fa9-Cz-9rdRWxp",
+            "3Raay_vqYHFU0RmDAwqKz",
+            "40Zfu7kSpQ69DmeUSLeE9",
+            "x2snDO_MMpfx15yUw1X9V",
+            "A6K7HXDD9bN0hAKaNCIn5",
+            "f2X-Ck74oZLgkeIlohMKX",
+            "ZgQVHquwUjfp4AjYhs5qS",
+            "gFR9t1RxJbpqyIsZRdBXw",
+            "MLf5oU3NXaQFcR1I4Ooa5",
+            "rH0szX6e2PdovU3bJqYkG",
+            "Ih2COdAZj3wQ23Gd7_xkv"
+          ],
+          "warn": [
+            "GfjyaywkrMD4N3hnMkzid",
+            "TM3PrNsBvbAWHkIAKyuSG"
+          ],
+          "error": [
+            "WPIx0ej2r3T7nzia63sru"
+          ]
+        }
+      },
+      "webkit": {
+        "screenshot": "../images/33383761-webkit.png",
+        "logs": {
+          "info": [],
+          "warn": [
+            "TM3PrNsBvbAWHkIAKyuSG",
+            "cenGR-cKaC9QBHB6W1OCU"
+          ],
+          "error": [
+            "INpWL8JcW41JzgVot5Txu",
+            "yHhZrPzmzhe6tTM1r688v",
+            "s_3aRPU2mG4w53I9UXhUH"
+          ]
+        }
+      }
+    }
+  }
+}

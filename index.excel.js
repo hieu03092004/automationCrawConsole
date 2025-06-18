@@ -25,6 +25,10 @@ const argv = yargs(hideBin(process.argv))
     description: 'Build number cho Jenkins mode',
     type: 'number'
   })
+  .option('shard', {
+    description: 'Shard configuration (e.g., "1/3" means run shard 1 of 3 total shards)',
+    type: 'string'
+  })
   .help('h')
   .alias('h', 'help')
   .argv;
@@ -117,9 +121,26 @@ const joinUrl = (hostname = '', pathname = '') => {
   
     const urls = await getPagesDeclarations()
   
+    // Handle sharding if specified
+    let shardsUrls = urls;
+    let shardSuffix = '';
+    
+    if (argv.shard) {
+      const [currentShard, totalShards] = argv.shard.split('/').map(Number);
+      if (!currentShard || !totalShards || currentShard > totalShards) {
+        throw new Error('Invalid shard configuration. Format should be "n/m" where n <= m');
+      }
+      
+      const itemsPerShard = Math.ceil(urls.length / totalShards);
+      const start = (currentShard - 1) * itemsPerShard;
+      const end = Math.min(start + itemsPerShard, urls.length);
+      shardsUrls = urls.slice(start, end);
+      shardSuffix = `-shard-${currentShard}-${totalShards}`;
+    }
+  
     const itemsObject = {}
-    for (const [i, url] of urls.entries()) {
-      //console.log(chalk.green(`[${i + 1}/${urls.length}][check-console]: ${url}`))
+    for (const [i, url] of shardsUrls.entries()) {
+      //console.log(chalk.green(`[${i + 1}/${shardsUrls.length}][check-console]: ${url}`))
       try {
         const { consoles } = await try2pass(
           () => crawConsoleALLBrowser({ url })
@@ -149,7 +170,8 @@ const joinUrl = (hostname = '', pathname = '') => {
       'items-object': itemsObject
     }
   
-    console.log('Creating report/project.json file')
-    await fs.promises.writeFile('./report/project.json', JSON.stringify(reportData, null, 2))
+    const reportPath = `./report/project${shardSuffix}.json`;
+    console.log(`Creating ${reportPath} file`);
+    await fs.promises.writeFile(reportPath, JSON.stringify(reportData, null, 2));
   }
 main();
