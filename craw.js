@@ -151,21 +151,26 @@ const crawConsoleBrowser = async (crawParams = {}) => {
     throw new Error('Can\'t support this browser');
   }
 
-  const browserInstance = await browserOS.launch({
-    timeout: 20000, // Tăng lên 30s cho độ tin cậy
-    args: [
-      '--no-sandbox', 
+  // Sửa: chỉ truyền args đặc biệt cho Chromium
+  const launchOptions = {
+    timeout: 20000
+  };
+  if (browser === 'chromium') {
+    launchOptions.args = [
+      '--no-sandbox',
       '--disable-setuid-sandbox',
-      '--ignore-certificate-errors', // Bỏ qua SSL errors
+      '--ignore-certificate-errors',
       '--ignore-ssl-errors',
       '--ignore-certificate-errors-spki-list',
       '--disable-web-security',
       '--disable-features=VizDisplayCompositor',
-      '--disable-dev-shm-usage', // Thêm option này để tránh memory issues
+      '--disable-dev-shm-usage',
       '--no-first-run',
       '--no-default-browser-check'
-    ]
-  });
+    ];
+  }
+
+  const browserInstance = await browserOS.launch(launchOptions);
   
   const page = await browserInstance.newPage();
   
