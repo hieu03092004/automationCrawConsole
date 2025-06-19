@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { crawConsoleALLBrowser } = require('../craw');
+const { nanoid } = require('nanoid');
 
 const timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
