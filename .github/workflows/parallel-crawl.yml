@@ -48,7 +48,7 @@ jobs:
         run: |
           METADATA=$(cat chunks/metadata.json)
           CHUNKS=$(echo "$METADATA" | jq -r '.numberOfChunks')
-          CHUNK_ARRAY=$(seq 1 $CHUNKS | jq -R . | jq -s .)
+          CHUNK_ARRAY=$(seq 1 $CHUNKS | jq -R . | jq -s -c .)
           echo "chunks=$CHUNKS" >> $GITHUB_OUTPUT
           echo "chunk_array=$CHUNK_ARRAY" >> $GITHUB_OUTPUT
           echo "Total chunks: $CHUNKS"
