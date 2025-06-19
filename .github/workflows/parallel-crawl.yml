@@ -48,7 +48,9 @@ jobs:
         run: |
           METADATA=$(cat chunks/metadata.json)
           CHUNKS=$(echo "$METADATA" | jq -r '.numberOfChunks')
+          CHUNK_ARRAY=$(seq 1 $CHUNKS | jq -R . | jq -s .)
           echo "chunks=$CHUNKS" >> $GITHUB_OUTPUT
+          echo "chunk_array=$CHUNK_ARRAY" >> $GITHUB_OUTPUT
           echo "Total chunks: $CHUNKS"
 
       - name: Upload chunks as artifacts
@@ -64,7 +66,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        chunk: ${{ fromJson(format('[{0}]', join(range(1, needs.setup.outputs.chunks + 1), ','))) }}
+        chunk: ${{ fromJson(needs.setup.outputs.chunk_array) }}
       fail-fast: false
       max-parallel: 30  # Giới hạn tối đa 30 runners đồng thời
 
