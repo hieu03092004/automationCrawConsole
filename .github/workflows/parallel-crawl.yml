@@ -1,0 +1,221 @@
+name: Parallel Crawl Console
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      number_of_chunks:
+        description: 'Number of parallel chunks (default: 30)'
+        required: false
+        default: '30'
+        type: string
+
+env:
+  NUMBER_OF_CHUNKS: ${{ github.event.inputs.number_of_chunks || '30' }}
+
+jobs:
+  # Job 1: Setup - Chia URLs thành chunks
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      chunks: ${{ steps.setup.outputs.chunks }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install
+
+      - name: Split URLs into chunks
+        run: npm run split
+        env:
+          NUMBER_OF_CHUNKS: ${{ env.NUMBER_OF_CHUNKS }}
+
+      - name: Get number of chunks
+        id: setup
+        run: |
+          METADATA=$(cat chunks/metadata.json)
+          CHUNKS=$(echo "$METADATA" | jq -r '.numberOfChunks')
+          echo "chunks=$CHUNKS" >> $GITHUB_OUTPUT
+          echo "Total chunks: $CHUNKS"
+
+      - name: Upload chunks as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: url-chunks
+          path: chunks/
+          retention-days: 1
+
+  # Job 2: Process chunks in parallel
+  process-chunks:
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chunk: ${{ fromJson(format('[{0}]', join(range(1, needs.setup.outputs.chunks + 1), ','))) }}
+      fail-fast: false
+      max-parallel: 30  # Giới hạn tối đa 30 runners đồng thời
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install
+
+      - name: Download chunks
+        uses: actions/download-artifact@v4
+        with:
+          name: url-chunks
+          path: chunks/
+
+      - name: Process chunk ${{ matrix.chunk }}
+        run: npm run process-chunk ${{ matrix.chunk }}
+        env:
+          CI: true
+
+      - name: Upload chunk result
+        uses: actions/upload-artifact@v4
+        with:
+          name: chunk-result-${{ matrix.chunk }}
+          path: results/chunk-${{ matrix.chunk }}-result.json
+          retention-days: 1
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-chunk-${{ matrix.chunk }}
+          path: report/images/
+          retention-days: 1
+
+  # Job 3: Merge results
+  merge-results:
+    needs: [setup, process-chunks]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download chunks metadata
+        uses: actions/download-artifact@v4
+        with:
+          name: url-chunks
+          path: chunks/
+
+      - name: Download all chunk results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: chunk-result-*
+          merge-multiple: true
+          path: results/
+
+      - name: Download all screenshots
+        uses: actions/download-artifact@v4
+        with:
+          pattern: screenshots-chunk-*
+          merge-multiple: true
+          path: report/images/
+
+      - name: Merge results
+        run: npm run merge
+
+      - name: Upload final report
+        uses: actions/upload-artifact@v4
+        with:
+          name: final-report
+          path: |
+            report/
+            chunks/metadata.json
+          retention-days: 30
+
+      - name: Generate summary
+        run: |
+          echo "=== PARALLEL CRAWL SUMMARY ===" >> $GITHUB_STEP_SUMMARY
+          if [ -f "report/summary.json" ]; then
+            SUMMARY=$(cat report/summary.json)
+            echo "**Project:** $(echo "$SUMMARY" | jq -r '.projectName')" >> $GITHUB_STEP_SUMMARY
+            echo "**Total URLs:** $(echo "$SUMMARY" | jq -r '.totalUrls')" >> $GITHUB_STEP_SUMMARY
+            echo "**Processed URLs:** $(echo "$SUMMARY" | jq -r '.processedUrls')" >> $GITHUB_STEP_SUMMARY
+            echo "**Success Rate:** $(echo "$SUMMARY" | jq -r '.successRate')" >> $GITHUB_STEP_SUMMARY
+            echo "**Total Time:** $(echo "$SUMMARY" | jq -r '.totalTime')" >> $GITHUB_STEP_SUMMARY
+            echo "**Number of Chunks:** $(echo "$SUMMARY" | jq -r '.chunks | length')" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Summary file not found" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  # Job 4: Generate HTML report
+  generate-report:
+    needs: merge-results
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download final report
+        uses: actions/download-artifact@v4
+        with:
+          name: final-report
+          path: .
+
+      - name: Generate HTML report
+        run: |
+          if [ -f "generate-report.js" ]; then
+            node generate-report.js
+          else
+            echo "generate-report.js not found, skipping HTML generation"
+          fi
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-report
+          path: report/html/
+          retention-days: 30
+
+      - name: Deploy to GitHub Pages (Optional)
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./report/html 

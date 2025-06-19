@@ -1,0 +1,144 @@
+{
+  "chunkNumber": "5",
+  "totalUrls": 2,
+  "processedUrls": 2,
+  "processingTime": "109.008s",
+  "startTime": "2025-06-19T07:11:46.340Z",
+  "endTime": "2025-06-19T07:13:35.348Z",
+  "itemsObject": {
+    "https://www.gravityglobal.com/services/research": {
+      "chromium": {
+        "screenshot": "../images/823e98cd-chromium.png",
+        "logs": {
+          "info": [],
+          "warn": [
+            "13tAFHwuGRBx6O5zK4Jtd"
+          ],
+          "error": [
+            "RoB1lQXn0xVAKUT7Fv951"
+          ]
+        }
+      },
+      "firefox": {
+        "screenshot": "../images/823e98cd-firefox.png",
+        "logs": {
+          "info": [
+            "56lekS3szftWfSajsaiz2",
+            "CudQLH-MyfErkmXzRN_9L",
+            "iPRu6Lhrrwsz7bPLLRJSu",
+            "6_xkcGCLdKKf8FZq6JeXZ",
+            "5LNRD05J9rH52jMhhosFn",
+            "TFH_NfpYDedbvmtnJrRDl",
+            "Fi2S159VXmKD-Ytc8OxkI",
+            "ZiJdyafqLEm8Xd0pJ5gRS",
+            "CkOWYSitNzCB48E2QvxCV",
+            "d7ci3iaSL4LX56OAdlQov",
+            "qZVEyNxAUP9m7IAIw4z6q",
+            "dvAjMYygX_SEPY7JLcXlv",
+            "rxllfQGvCY9IaOCnCglLH",
+            "l2zyB3UQHwZJeAzDOZWUc",
+            "lfPRFLyopS6o__3Tawlky",
+            "13puWkikYbL5jkyYYZMVi",
+            "oenUPx4U8ZcNGU5SFbHAS",
+            "pgnnDTwH8dkptc2_v6qG4",
+            "wVoQ7B4uSYOMODXdkl0iv",
+            "nX9gZbSLo1PQiu6FVOETd",
+            "dTIa87ZlbiS0C-lqVTUnF",
+            "0tpAHDKkEXrlqPZiyp1KL",
+            "bkzQlPwtVCOAsSJ1Ts4Xs",
+            "vTITZ-JRzb3OCc0e6wxU_",
+            "3SbzbyvNimlnXUd2k8So1",
+            "jEc70TmMdQ6DDk1ieM4em"
+          ],
+          "warn": [
+            "SUA7f1PNRYFrqQVKgNSUZ"
+          ],
+          "error": []
+        }
+      },
+      "webkit": {
+        "screenshot": "../images/823e98cd-webkit.png",
+        "logs": {
+          "info": [],
+          "warn": [
+            "13tAFHwuGRBx6O5zK4Jtd",
+            "qUue-tUXI8ahjoSvhUENo"
+          ],
+          "error": [
+            "RoB1lQXn0xVAKUT7Fv951",
+            "UwDKY9DCCREAJ0W7WMKO7",
+            "xc3VN7Bl1UibQsdBKnWB7"
+          ]
+        }
+      }
+    },
+    "https://www.gravityglobal.com/services/public-relations": {
+      "chromium": {
+        "screenshot": "../images/e851c0d7-chromium.png",
+        "logs": {
+          "info": [],
+          "warn": [
+            "13tAFHwuGRBx6O5zK4Jtd"
+          ],
+          "error": [
+            "RoB1lQXn0xVAKUT7Fv951"
+          ]
+        }
+      },
+      "firefox": {
+        "screenshot": "../images/e851c0d7-firefox.png",
+        "logs": {
+          "info": [
+            "56lekS3szftWfSajsaiz2",
+            "CudQLH-MyfErkmXzRN_9L",
+            "iPRu6Lhrrwsz7bPLLRJSu",
+            "6_xkcGCLdKKf8FZq6JeXZ",
+            "5LNRD05J9rH52jMhhosFn",
+            "TFH_NfpYDedbvmtnJrRDl",
+            "Fi2S159VXmKD-Ytc8OxkI",
+            "ZiJdyafqLEm8Xd0pJ5gRS",
+            "CkOWYSitNzCB48E2QvxCV",
+            "d7ci3iaSL4LX56OAdlQov",
+            "qZVEyNxAUP9m7IAIw4z6q",
+            "dvAjMYygX_SEPY7JLcXlv",
+            "rxllfQGvCY9IaOCnCglLH",
+            "l2zyB3UQHwZJeAzDOZWUc",
+            "Mht8hMZ3dPWJvCL_bJO-E",
+            "o83nyAX61e-qwgmMdt-g_",
+            "dTIa87ZlbiS0C-lqVTUnF",
+            "oenUPx4U8ZcNGU5SFbHAS",
+            "LXqlFnatF4KPsZXynaPP-",
+            "nX9gZbSLo1PQiu6FVOETd",
+            "EE3iLZsYXK65yf9KodprA",
+            "62-etVBx72VEqStCNiA5X",
+            "bkzQlPwtVCOAsSJ1Ts4Xs",
+            "PHh2bkZFqe2wPkr3A_2iL",
+            "-18drGW5BkzNPwKywZZcs",
+            "vTITZ-JRzb3OCc0e6wxU_",
+            "h_f_nhRYIFyXAKgcry4qN",
+            "jEc70TmMdQ6DDk1ieM4em"
+          ],
+          "warn": [
+            "SUA7f1PNRYFrqQVKgNSUZ",
+            "13tAFHwuGRBx6O5zK4Jtd"
+          ],
+          "error": []
+        }
+      },
+      "webkit": {
+        "screenshot": "../images/e851c0d7-webkit.png",
+        "logs": {
+          "info": [],
+          "warn": [
+            "13tAFHwuGRBx6O5zK4Jtd"
+          ],
+          "error": [
+            "RoB1lQXn0xVAKUT7Fv951",
+            "UwDKY9DCCREAJ0W7WMKO7",
+            "xc3VN7Bl1UibQsdBKnWB7"
+          ]
+        }
+      }
+    }
+  }
+}

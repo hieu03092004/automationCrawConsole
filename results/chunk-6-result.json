@@ -1,0 +1,166 @@
+{
+  "chunkNumber": "6",
+  "totalUrls": 2,
+  "processedUrls": 2,
+  "processingTime": "109.718s",
+  "startTime": "2025-06-19T07:11:46.441Z",
+  "endTime": "2025-06-19T07:13:36.159Z",
+  "itemsObject": {
+    "https://www.gravityglobal.com/services/creative-content": {
+      "chromium": {
+        "screenshot": "../images/f1ca52d6-chromium.png",
+        "logs": {
+          "info": [],
+          "warn": [
+            "PjWrGI_6EPcomGurxL_g2"
+          ],
+          "error": [
+            "smmMQ5uzHlTJwAidd5bp_"
+          ]
+        }
+      },
+      "firefox": {
+        "screenshot": "../images/f1ca52d6-firefox.png",
+        "logs": {
+          "info": [
+            "mFgz_pQmPSBBmxeEX0U82",
+            "BsNC84qI5kE6YslUP5BSo",
+            "xCxoNR3gf3dKGpMQXJlw3",
+            "676a8Xl_duQ3NxNBXjc9d",
+            "V1e85ihhOn958pvshsash",
+            "8L7lGxGyCAFyrERbTLfGP",
+            "D8wk9-gMKjhSKYK9-uqrZ",
+            "89O_EXMBV-w9Wezp1H1S0",
+            "rMf5UWuqpsNkz--wKLHpN",
+            "Gmy-CkdwFNQnHy_5wUz-N",
+            "Vc-ShCQFsQxMcadOfO6tH",
+            "hWAczasr_J0GLAcryYwKi",
+            "smiO29fe_zyDJi8mnThjr",
+            "J3vydm1Y4opr9n9sD9Y-V",
+            "14qabxoAwLQ3vViGJsgAd",
+            "ugCXUhvM-fIMf1Fjqm6U5",
+            "jSFtZvzXEuN-8V3mkob-B",
+            "oXqDBuafQfjRQtdYaQY72",
+            "dDsKFYjuiNsb9r431a6Zb",
+            "DtPJQPpLojkw34EqgKQ7R",
+            "cb1_kbq_w93FrRKWtN69l",
+            "ZEIPTR_d6AJ9xdzhKwB46",
+            "9Z6q5IRvjlTO49EjHdxQU",
+            "qW3DhMpEiDNpWe6R7pfgx",
+            "l5TGXy5P5WQRlSnF9FScs",
+            "HJ6yNKrKQw6q0nHZZiOu0",
+            "Ln-sOibv0sX8_21UOM30a",
+            "htYBthajgwslVS8W6TrPl",
+            "3qbJnjyg1x_r2oQRFvbrS",
+            "_IYgrH5kNiQLZgzVTpqIz",
+            "UkSBPe3uUevtRIv4EK3eG",
+            "t5xlF1X-Ybhn2bfZZMqkY",
+            "noPtNBtGJHUkUggdYaoRS",
+            "ZrPhm3-z8xwmpxr-iDBDc",
+            "arBHY07icimbyk13B_Rai",
+            "QO2LbE15ID9Z4Gkze9gH9",
+            "kCyPTCJ2Zks_gnaMRlSJq",
+            "Aoya8xsthiy_NKnsNmXJg",
+            "hMUFQmGuUNMRj6pLezAFJ",
+            "8rKuV3wQlzxcmli0Lhb0z"
+          ],
+          "warn": [
+            "kShak-heZgd6ejwJZH3sI",
+            "PjWrGI_6EPcomGurxL_g2",
+            "_Bv8pWtp2xdGQWhE_gT9F"
+          ],
+          "error": [
+            "0j1rUDDGm8apuBNJelyKS"
+          ]
+        }
+      },
+      "webkit": {
+        "screenshot": "../images/f1ca52d6-webkit.png",
+        "logs": {
+          "info": [],
+          "warn": [
+            "PjWrGI_6EPcomGurxL_g2",
+            "ROPjO444zrfoY7yjmkG4g"
+          ],
+          "error": [
+            "smmMQ5uzHlTJwAidd5bp_",
+            "3kKMliNTCDmsoo7ZFVSbu",
+            "svYSl-whHf5liqJ6BQktV"
+          ]
+        }
+      }
+    },
+    "https://www.gravityglobal.com/services/digital/user-experience-optimization": {
+      "chromium": {
+        "screenshot": "../images/935ae05f-chromium.png",
+        "logs": {
+          "info": [],
+          "warn": [
+            "PjWrGI_6EPcomGurxL_g2"
+          ],
+          "error": [
+            "smmMQ5uzHlTJwAidd5bp_"
+          ]
+        }
+      },
+      "firefox": {
+        "screenshot": "../images/935ae05f-firefox.png",
+        "logs": {
+          "info": [
+            "mFgz_pQmPSBBmxeEX0U82",
+            "BsNC84qI5kE6YslUP5BSo",
+            "xCxoNR3gf3dKGpMQXJlw3",
+            "676a8Xl_duQ3NxNBXjc9d",
+            "Gmy-CkdwFNQnHy_5wUz-N",
+            "Vc-ShCQFsQxMcadOfO6tH",
+            "hWAczasr_J0GLAcryYwKi",
+            "smiO29fe_zyDJi8mnThjr",
+            "J3vydm1Y4opr9n9sD9Y-V",
+            "14qabxoAwLQ3vViGJsgAd",
+            "9Z6q5IRvjlTO49EjHdxQU",
+            "XVHWdR3Pnx5osjoWq0P4A",
+            "ugCXUhvM-fIMf1Fjqm6U5",
+            "jSFtZvzXEuN-8V3mkob-B",
+            "oXqDBuafQfjRQtdYaQY72",
+            "3tabUWczi_F_cqbXezEEm",
+            "6DIqX3MPRrNG4py8W_jCH",
+            "dDsKFYjuiNsb9r431a6Zb",
+            "htYBthajgwslVS8W6TrPl",
+            "l5TGXy5P5WQRlSnF9FScs",
+            "HJ6yNKrKQw6q0nHZZiOu0",
+            "ssdwuL075vbey-PUtU_nc",
+            "3qbJnjyg1x_r2oQRFvbrS",
+            "UkSBPe3uUevtRIv4EK3eG",
+            "t5xlF1X-Ybhn2bfZZMqkY",
+            "rIZYOBDJfJjzjKTZ7mbmn",
+            "noPtNBtGJHUkUggdYaoRS",
+            "3h-NpyMmB2ZV9mpfqeSC8",
+            "kCyPTCJ2Zks_gnaMRlSJq",
+            "eNDEbzwGi4jnesi3glhUP"
+          ],
+          "warn": [
+            "kShak-heZgd6ejwJZH3sI",
+            "PjWrGI_6EPcomGurxL_g2"
+          ],
+          "error": [
+            "0j1rUDDGm8apuBNJelyKS"
+          ]
+        }
+      },
+      "webkit": {
+        "screenshot": "../images/935ae05f-webkit.png",
+        "logs": {
+          "info": [],
+          "warn": [
+            "PjWrGI_6EPcomGurxL_g2"
+          ],
+          "error": [
+            "smmMQ5uzHlTJwAidd5bp_",
+            "3kKMliNTCDmsoo7ZFVSbu",
+            "svYSl-whHf5liqJ6BQktV"
+          ]
+        }
+      }
+    }
+  }
+}

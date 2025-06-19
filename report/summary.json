@@ -1,0 +1,60 @@
+{
+  "timestamp": "2025-06-19T07:13:51.716Z",
+  "projectName": "MyProject",
+  "totalUrls": 20,
+  "processedUrls": 20,
+  "successRate": "100.00%",
+  "totalTime": "1123.45s",
+  "chunks": [
+    {
+      "chunkNumber": "1",
+      "processedUrls": 2,
+      "processingTime": "109.273s"
+    },
+    {
+      "chunkNumber": "2",
+      "processedUrls": 2,
+      "processingTime": "124.871s"
+    },
+    {
+      "chunkNumber": "3",
+      "processedUrls": 2,
+      "processingTime": "123.773s"
+    },
+    {
+      "chunkNumber": "4",
+      "processedUrls": 2,
+      "processingTime": "108.774s"
+    },
+    {
+      "chunkNumber": "5",
+      "processedUrls": 2,
+      "processingTime": "109.008s"
+    },
+    {
+      "chunkNumber": "6",
+      "processedUrls": 2,
+      "processingTime": "109.718s"
+    },
+    {
+      "chunkNumber": "7",
+      "processedUrls": 2,
+      "processingTime": "110.329s"
+    },
+    {
+      "chunkNumber": "8",
+      "processedUrls": 2,
+      "processingTime": "107.372s"
+    },
+    {
+      "chunkNumber": "9",
+      "processedUrls": 2,
+      "processingTime": "110.465s"
+    },
+    {
+      "chunkNumber": "10",
+      "processedUrls": 2,
+      "processingTime": "109.863s"
+    }
+  ]
+}
