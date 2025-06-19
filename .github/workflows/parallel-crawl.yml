@@ -184,6 +184,13 @@ jobs:
       - name: Merge results
         run: npm run merge
 
+      - name: Upload merged hashDataLogs.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: hashDataLogs
+          path: hashDataLogs.json
+          retention-days: 30
+
       - name: Upload final report
         uses: actions/upload-artifact@v4
         with:
@@ -230,6 +237,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: final-report
+          path: .
+
+      - name: Download merged hashDataLogs.json
+        uses: actions/download-artifact@v4
+        with:
+          name: hashDataLogs
           path: .
 
       - name: Generate HTML report
