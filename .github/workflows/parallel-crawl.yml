@@ -22,6 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       chunks: ${{ steps.setup.outputs.chunks }}
+      chunk_array: ${{ steps.setup.outputs.chunk_array }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
