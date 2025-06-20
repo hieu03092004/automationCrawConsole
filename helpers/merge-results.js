@@ -139,6 +139,29 @@ async function mergeResults() {
     // Đảm bảo tất cả keys từ project.json có trong hashDataLogs.json
     console.log('\n=== ENSURING ALL KEYS ARE PRESENT ===');
     await ensureAllKeysPresent(remappedReportData);
+    try {
+      const project = JSON.parse(fs.readFileSync(path.join(reportDir, 'project.json'), 'utf8'));
+      const hashData = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'hashDataLogs.json'), 'utf8'));
+      const usedKeys = new Set();
+      for (const chunk of project.chunkResults) {
+        for (const url in chunk.itemsObject) {
+          for (const browser in chunk.itemsObject[url]) {
+            const logs = chunk.itemsObject[url][browser].logs;
+            if (logs) {
+              [...logs.info, ...logs.warn, ...logs.error].forEach(k => usedKeys.add(k));
+            }
+          }
+        }
+      }
+      const cleaned = { hash: {} };
+      for (const key of usedKeys) {
+        if (hashData.hash[key]) cleaned.hash[key] = hashData.hash[key];
+      }
+      fs.writeFileSync(path.join(__dirname, '..', 'hashDataLogs.json'), JSON.stringify(cleaned, null, 2));
+      console.log(`\n=== CLEANUP COMPLETED: hashDataLogs.json now only contains used keys (${usedKeys.size}) ===`);
+    } catch (cleanupError) {
+      console.warn('Cleanup step failed:', cleanupError.message);
+    }
 
     return remappedReportData;
 
