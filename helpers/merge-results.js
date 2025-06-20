@@ -84,8 +84,7 @@ async function mergeResults() {
       totalProcessedUrls: totalProcessedUrls,
       totalProcessingTime: `${totalProcessingTime.toFixed(2)}s`,
       numberOfChunks: metadata.numberOfChunks,
-      chunkResults: chunkResults,
-      'items-object': mergedItemsObject
+      chunkResults: chunkResults
     };
 
     // Lưu report cuối cùng
@@ -129,14 +128,13 @@ async function mergeResults() {
     // Sau khi remap, ghi lại project.json với logs đã remap
     const remappedReportDir = path.join(__dirname, '..', 'report');
     const remappedReportFile = path.join(remappedReportDir, 'project.json');
-    // Đọc lại project.json, cập nhật chunkResults và mergedItemsObject đã remap
+    // Đọc lại project.json, cập nhật chunkResults đã remap
     let remappedReportData = JSON.parse(fs.readFileSync(remappedReportFile, 'utf8'));
-    remappedReportData['items-object'] = mergedItemsObject;
     remappedReportData.chunkResults = chunkResults;
     fs.writeFileSync(remappedReportFile, JSON.stringify(remappedReportData, null, 2));
     console.log('Đã ghi lại project.json với logs đã remap về key duy nhất.');
 
-    // Đảm bảo tất cả keys từ project.json có trong hashDataLogs.json
+    // Đảm bảo tất cả keys từ chunkResults có trong hashDataLogs.json
     console.log('\n=== ENSURING ALL KEYS ARE PRESENT ===');
     await ensureAllKeysPresent(remappedReportData);
     try {
@@ -144,9 +142,9 @@ async function mergeResults() {
       const hashData = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'hashDataLogs.json'), 'utf8'));
       const usedKeys = new Set();
       for (const chunk of project.chunkResults) {
-        for (const url in chunk.itemsObject) {
-          for (const browser in chunk.itemsObject[url]) {
-            const logs = chunk.itemsObject[url][browser].logs;
+        for (const [url, browsers] of Object.entries(chunk.itemsObject)) {
+          for (const browser in browsers) {
+            const logs = browsers[browser].logs;
             if (logs) {
               [...logs.info, ...logs.warn, ...logs.error].forEach(k => usedKeys.add(k));
             }
@@ -342,7 +340,7 @@ async function mergeHashDataLogsAndRemapLogs(chunkResults, mergedItemsObject) {
   }
 }
 
-// Hàm đảm bảo tất cả keys từ project.json có trong hashDataLogs.json
+// Hàm đảm bảo tất cả keys từ chunkResults có trong hashDataLogs.json
 async function ensureAllKeysPresent(reportData) {
   try {
     const mainHashDataLogsPath = path.join(__dirname, '..', 'hashDataLogs.json');
@@ -356,33 +354,30 @@ async function ensureAllKeysPresent(reportData) {
     let hashDataLogs = JSON.parse(fs.readFileSync(mainHashDataLogsPath, 'utf8'));
     const existingKeys = new Set(Object.keys(hashDataLogs.hash));
     
-    // Extract tất cả keys từ project.json
-    const allKeysFromProject = new Set();
-    
-    for (const [url, browsers] of Object.entries(reportData['items-object'])) {
-      for (const [browser, data] of Object.entries(browsers)) {
-        if (data.logs) {
-          const logs = data.logs;
-          const logKeys = [
-            ...logs.info,
-            ...logs.warn,
-            ...logs.error
-          ];
-          logKeys.forEach(key => allKeysFromProject.add(key));
+    // Extract tất cả keys từ chunkResults
+    const allKeysFromChunks = new Set();
+    for (const chunk of reportData.chunkResults) {
+      for (const [url, browsers] of Object.entries(chunk.itemsObject)) {
+        for (const browser in browsers) {
+          const logs = browsers[browser].logs;
+          if (logs) {
+            const logKeys = [
+              ...logs.info,
+              ...logs.warn,
+              ...logs.error
+            ];
+            logKeys.forEach(key => allKeysFromChunks.add(key));
+          }
         }
       }
     }
-    
     // Tìm keys bị thiếu
-    const missingKeys = Array.from(allKeysFromProject).filter(key => !existingKeys.has(key));
-    
+    const missingKeys = Array.from(allKeysFromChunks).filter(key => !existingKeys.has(key));
     if (missingKeys.length === 0) {
-      console.log('✅ All keys from project.json are present in hashDataLogs.json');
+      console.log('✅ All keys from chunkResults are present in hashDataLogs.json');
       return;
     }
-    
     console.log(`⚠️  Found ${missingKeys.length} missing keys, adding placeholder values...`);
-    
     // Thêm placeholder values cho missing keys
     let addedKeys = 0;
     for (const key of missingKeys) {
@@ -390,13 +385,10 @@ async function ensureAllKeysPresent(reportData) {
       hashDataLogs.hash[key] = placeholderMessage;
       addedKeys++;
     }
-    
     // Lưu file đã cập nhật
     fs.writeFileSync(mainHashDataLogsPath, JSON.stringify(hashDataLogs, null, 2));
-    
     console.log(`✅ Added ${addedKeys} placeholder keys to hashDataLogs.json`);
     console.log(`📊 Total keys in hashDataLogs.json: ${Object.keys(hashDataLogs.hash).length}`);
-    
   } catch (error) {
     console.error('Error ensuring all keys are present:', error.message);
   }

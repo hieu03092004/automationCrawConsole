@@ -39,6 +39,12 @@ function buildLogList(keys, cssClass) {
     }).join('');
 }
 
+// Tính tổng số URL từ tất cả chunkResults
+let totalUrls = 0;
+for (const chunk of projectData.chunkResults) {
+    totalUrls += Object.keys(chunk.itemsObject).length;
+}
+
 // Tạo HTML report với styling hiện đại
 let html = `
 <!DOCTYPE html>
@@ -110,7 +116,7 @@ let html = `
         <div class="summary-box">
             <div class="summary-item">
                 <h3>Total URLs</h3>
-                <p>${Object.keys(projectData['items-object']).length}</p>
+                <p>${totalUrls}</p>
             </div>
             <div class="summary-item">
                 <h3>Total Browsers</h3>
@@ -118,62 +124,56 @@ let html = `
             </div>
         </div>`;
 
-// Xử lý từng URL
-for (const [url, browsers] of Object.entries(projectData['items-object'])) {
-    html += `
-        <div class="url-section">
-            <div class="url-header">${escapeHTML(url)}</div>`;
-
-    // Xử lý từng trình duyệt
-    for (const [browser, data] of Object.entries(browsers)) {
-        if (data.logs) {  // Kiểm tra nếu có logs
-            const logs = data.logs;
-            const totalLogs = logs.info.length + logs.warn.length + logs.error.length;
-            const successRate = totalLogs > 0 
-                ? ((logs.info.length / totalLogs) * 100).toFixed(1) 
-                : 'N/A';
-
-            html += `
-                <div class="browser-section">
-                    <div class="browser-header">
-                        <div class="browser-name">${browser}</div>
-                    </div>
-                    
-                    <div class="stats">
-                        <div class="stat-item total-logs">Total Logs: ${totalLogs}</div>
-                        <div class="stat-item error-count">Errors: ${logs.error.length}</div>
-                        <div class="stat-item warning-count">Warnings: ${logs.warn.length}</div>
-                        <div class="stat-item success-rate">Success Rate: ${successRate}%</div>
-                    </div>
-
-                    <div class="logs-container">
-                        <div class="log-section">
-                            <h4>Info Logs (${logs.info.length})</h4>
-                            <div class="log-details">
-                                ${buildLogList(logs.info, 'info-log')}
+// Duyệt qua từng chunk, từng url, từng browser để render report
+for (const chunk of projectData.chunkResults) {
+    for (const [url, browsers] of Object.entries(chunk.itemsObject)) {
+        html += `
+            <div class="url-section">
+                <div class="url-header">${escapeHTML(url)}</div>`;
+        for (const [browser, data] of Object.entries(browsers)) {
+            if (data.logs) {
+                const logs = data.logs;
+                const totalLogs = logs.info.length + logs.warn.length + logs.error.length;
+                const successRate = totalLogs > 0 
+                    ? ((logs.info.length / totalLogs) * 100).toFixed(1) 
+                    : 'N/A';
+                html += `
+                    <div class="browser-section">
+                        <div class="browser-header">
+                            <div class="browser-name">${browser}</div>
+                        </div>
+                        <div class="stats">
+                            <div class="stat-item total-logs">Total Logs: ${totalLogs}</div>
+                            <div class="stat-item error-count">Errors: ${logs.error.length}</div>
+                            <div class="stat-item warning-count">Warnings: ${logs.warn.length}</div>
+                            <div class="stat-item success-rate">Success Rate: ${successRate}%</div>
+                        </div>
+                        <div class="logs-container">
+                            <div class="log-section">
+                                <h4>Info Logs (${logs.info.length})</h4>
+                                <div class="log-details">
+                                    ${buildLogList(logs.info, 'info-log')}
+                                </div>
+                            </div>
+                            <div class="log-section">
+                                <h4>Warning Logs (${logs.warn.length})</h4>
+                                <div class="log-details">
+                                    ${buildLogList(logs.warn, 'warning-log')}
+                                </div>
+                            </div>
+                            <div class="log-section">
+                                <h4>Error Logs (${logs.error.length})</h4>
+                                <div class="log-details">
+                                    ${buildLogList(logs.error, 'error-log')}
+                                </div>
                             </div>
                         </div>
-                        
-                        <div class="log-section">
-                            <h4>Warning Logs (${logs.warn.length})</h4>
-                            <div class="log-details">
-                                ${buildLogList(logs.warn, 'warning-log')}
-                            </div>
-                        </div>
-                        
-                        <div class="log-section">
-                            <h4>Error Logs (${logs.error.length})</h4>
-                            <div class="log-details">
-                                ${buildLogList(logs.error, 'error-log')}
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
+                    </div>`;
+            }
         }
+        html += `
+            </div>`;
     }
-
-    html += `
-        </div>`;
 }
 
 html += `
