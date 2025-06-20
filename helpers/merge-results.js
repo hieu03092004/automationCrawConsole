@@ -47,16 +47,20 @@ async function mergeResults() {
       const resultFile = path.join(__dirname, '..', 'chunk-results', `chunk-${i}-result.json`);
       
       if (fs.existsSync(resultFile)) {
-        const chunkResult = JSON.parse(fs.readFileSync(resultFile, 'utf8'));
-        chunkResults.push(chunkResult);
-        
-        // Merge itemsObject
-        Object.assign(mergedItemsObject, chunkResult.itemsObject);
-        
-        totalProcessedUrls += chunkResult.processedUrls;
-        totalProcessingTime += parseFloat(chunkResult.processingTime);
-        
-        console.log(`Loaded chunk ${i}: ${chunkResult.processedUrls} URLs processed in ${chunkResult.processingTime}`);
+        try {
+          const chunkResult = JSON.parse(fs.readFileSync(resultFile, 'utf8'));
+          chunkResults.push(chunkResult);
+          
+          // Merge itemsObject
+          Object.assign(mergedItemsObject, chunkResult.itemsObject);
+          
+          totalProcessedUrls += chunkResult.processedUrls;
+          totalProcessingTime += parseFloat(chunkResult.processingTime);
+          
+          console.log(`Loaded chunk ${i}: ${chunkResult.processedUrls} URLs processed in ${chunkResult.processingTime}`);
+        } catch (error) {
+          console.warn(`Warning: Could not parse result file for chunk ${i}: ${error.message}. Skipping this chunk.`);
+        }
       } else {
         console.warn(`Warning: Result file for chunk ${i} not found`);
       }

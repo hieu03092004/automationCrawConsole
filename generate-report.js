@@ -137,7 +137,6 @@ for (const [url, browsers] of Object.entries(projectData['items-object'])) {
                 <div class="browser-section">
                     <div class="browser-header">
                         <div class="browser-name">${browser}</div>
-                        <a href="${data.screenshot}" class="screenshot-link" target="_blank">View Screenshot</a>
                     </div>
                     
                     <div class="stats">
