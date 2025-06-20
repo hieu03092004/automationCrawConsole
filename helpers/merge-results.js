@@ -44,7 +44,7 @@ async function mergeResults() {
     let totalProcessingTime = 0;
 
     for (let i = 1; i <= metadata.numberOfChunks; i++) {
-      const resultFile = path.join(__dirname, '..', 'results', `chunk-${i}-result.json`);
+      const resultFile = path.join(__dirname, '..', 'chunk-results', `chunk-${i}-result.json`);
       
       if (fs.existsSync(resultFile)) {
         const chunkResult = JSON.parse(fs.readFileSync(resultFile, 'utf8'));
@@ -150,7 +150,7 @@ async function mergeHashDataLogsAndRemapLogs(chunkResults, mergedItemsObject) {
 
     // Duyệt qua tất cả các chunk hashDataLogs
     for (let i = 1; i <= metadata.numberOfChunks; i++) {
-      const chunkHashDataLogsPath = path.join(__dirname, '..', 'results', `chunk-${i}-hashDataLogs.json`);
+      const chunkHashDataLogsPath = path.join(__dirname, '..', 'chunk-results', `chunk-${i}-hashDataLogs.json`);
       if (fs.existsSync(chunkHashDataLogsPath)) {
         try {
           const chunkHashData = JSON.parse(fs.readFileSync(chunkHashDataLogsPath, 'utf8'));
@@ -214,7 +214,7 @@ async function mergeHashDataLogsAndRemapLogs(chunkResults, mergedItemsObject) {
         // Tìm value trong các file hashDataLogs
         let found = false;
         for (let i = 1; i <= metadata.numberOfChunks; i++) {
-          const chunkHashDataLogsPath = path.join(__dirname, '..', 'results', `chunk-${i}-hashDataLogs.json`);
+          const chunkHashDataLogsPath = path.join(__dirname, '..', 'chunk-results', `chunk-${i}-hashDataLogs.json`);
           if (fs.existsSync(chunkHashDataLogsPath)) {
             try {
               const chunkHashData = JSON.parse(fs.readFileSync(chunkHashDataLogsPath, 'utf8'));

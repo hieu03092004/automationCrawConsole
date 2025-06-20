@@ -8,6 +8,7 @@
     "split": "node helpers/split-urls.js",
     "process-chunk": "node helpers/process-chunk.js",
     "merge": "node helpers/merge-results.js",
+    "organize-chunks": "node helpers/organize-chunk-results.js",
     "crawl": "node index.excel.js --excel input.xlsx",
     "parallel-setup": "npm run split",
     "parallel-merge": "npm run merge",

@@ -108,11 +108,11 @@ jobs:
           path: results/chunk-${{ matrix.chunk }}-result.json
           retention-days: 1
 
-      - name: Upload screenshots
+      - name: Upload chunk hash logs
         uses: actions/upload-artifact@v4
         with:
-          name: screenshots-chunk-${{ matrix.chunk }}
-          path: report/images/
+          name: chunk-hashlogs-${{ matrix.chunk }}
+          path: results/chunk-${{ matrix.chunk }}-hashDataLogs.json
           retention-days: 1
 
   # Job 3: Merge results
@@ -144,28 +144,21 @@ jobs:
         with:
           pattern: chunk-result-*
           merge-multiple: true
-          path: results/
+          path: chunk-results/
 
       - name: Download all chunk hash logs
         uses: actions/download-artifact@v4
         with:
-          pattern: chunk-*-hashDataLogs.json
+          pattern: chunk-hashlogs-*
           merge-multiple: true
-          path: results/
-
-      - name: Download all screenshots
-        uses: actions/download-artifact@v4
-        with:
-          pattern: screenshots-chunk-*
-          merge-multiple: true
-          path: report/images/
+          path: chunk-results/
 
       - name: Merge all chunk hashDataLogs into hashDataLogs.json
         run: |
           node <<'EOF'
           const fs = require('fs');
           const path = require('path');
-          const resultsDir = path.join(__dirname, 'results');
+          const resultsDir = path.join(__dirname, 'chunk-results');
           const hashFiles = fs.readdirSync(resultsDir).filter(f => f.endsWith('-hashDataLogs.json'));
           const merged = { hash: {} };
           for (const file of hashFiles) {
@@ -184,6 +177,9 @@ jobs:
       - name: Merge results
         run: npm run merge
 
+      - name: Organize chunk results
+        run: npm run organize-chunks
+
       - name: Upload merged hashDataLogs.json
         uses: actions/upload-artifact@v4
         with:
@@ -197,6 +193,7 @@ jobs:
           name: final-report
           path: |
             report/
+            chunk-results/
             chunks/metadata.json
           retention-days: 30
 
@@ -253,11 +250,14 @@ jobs:
             echo "generate-report.js not found, skipping HTML generation"
           fi
 
-      - name: Upload HTML report
+      - name: Upload final report with HTML
         uses: actions/upload-artifact@v4
         with:
-          name: html-report
-          path: report/html/
+          name: final-report-with-html
+          path: |
+            report/
+            chunk-results/
+            chunks/metadata.json
           retention-days: 30
 
       - name: Deploy to GitHub Pages (Optional)

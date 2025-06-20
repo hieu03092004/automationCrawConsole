@@ -2,7 +2,6 @@ const playwright = require('playwright');
 const { nanoid } = require('nanoid');
 const fs = require('fs');
 const path = require('path');
-const crypto = require('crypto');
 
 // Khai báo allLogsMap ở scope toàn cục
 const allLogsMap = new Map(); // key: nanoid, value: log message
@@ -16,11 +15,6 @@ const BROWSER_OPTION = {
   firefox: playwright.firefox,
   webkit: playwright.webkit
 };
-
-// Hàm tạo tên file an toàn từ URL
-function getUrlHash(url) {
-  return crypto.createHash('md5').update(url).digest('hex').substring(0, 8);
-}
 
 function getOrCreateLogKey(msg) {
   // Ưu tiên kiểm tra trong allLogsMap (bộ nhớ tạm của process)
@@ -222,26 +216,6 @@ const crawConsoleBrowser = async (crawParams = {}) => {
       });
     });
 
-    // Tạo thư mục images nếu chưa có
-    const imagesDir = path.join('report', 'images');
-    if (!fs.existsSync(imagesDir)) {
-      fs.mkdirSync(imagesDir, { recursive: true });
-    }
-
-    // Tạo tên file ảnh từ URL và browser
-    const urlHash = getUrlHash(url);
-    const screenshotName = `${urlHash}-${browser}.png`;
-    const screenshotPath = path.join(imagesDir, screenshotName);
-
-    try {
-      await page.screenshot({ 
-        path: screenshotPath,
-        fullPage: true
-      });
-    } catch (error) {
-      console.error(`Error taking screenshot for ${url} on ${browser}:`, error.message);
-    }
-
     // Chuyển đổi Set thành mảng key
     const logsObject = {
       info: Array.from(logsMap.info),
@@ -256,7 +230,6 @@ const crawConsoleBrowser = async (crawParams = {}) => {
 
     return { 
       [browser]: {
-        screenshot: `../images/${screenshotName}`,  // Đường dẫn tương đối từ report/html/index.html
         logs: logsObject
       }
     };
