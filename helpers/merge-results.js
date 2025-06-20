@@ -66,12 +66,19 @@ async function mergeResults() {
       }
     }
 
-    // Đọc thông tin project từ input file
-    const data = getInput('input/input.xlsx');
+    // Đọc thông tin project từ input file một cách an toàn
+    let projectName = 'Unknown Project';
+    try {
+      const data = getInput('input/input.xlsx');
+      projectName = data.Sitedeclaration['Project Name'] || 'Project Name Not Found';
+    } catch (error) {
+      console.warn(`[Warning] Could not read project info from input/input.xlsx: ${error.message}`);
+      console.warn('[Warning] Using default project name. This does not affect the crawl results.');
+    }
     
     // Tạo report data
     const reportData = {
-      projectName: data.Sitedeclaration['Project Name'],
+      projectName: projectName,
       buildNumber: new Date().getTime(),
       totalUrls: metadata.totalUrls,
       totalProcessedUrls: totalProcessedUrls,
@@ -100,7 +107,7 @@ async function mergeResults() {
     // Tạo summary file
     const summary = {
       timestamp: new Date().toISOString(),
-      projectName: data.Sitedeclaration['Project Name'],
+      projectName: projectName,
       totalUrls: metadata.totalUrls,
       processedUrls: totalProcessedUrls,
       successRate: `${((totalProcessedUrls / metadata.totalUrls) * 100).toFixed(2)}%`,

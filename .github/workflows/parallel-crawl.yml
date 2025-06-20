@@ -214,7 +214,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: final-report
-          path: .
+          path: report
 
       - name: Download merged hashDataLogs.json
         uses: actions/download-artifact@v4
