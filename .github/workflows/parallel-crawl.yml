@@ -174,9 +174,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: final-report
-          path: |
-            report/
-            chunk-results/
+          path: report/
           retention-days: 30
 
       - name: Generate summary
@@ -236,9 +234,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: final-report-with-html
-          path: |
-            report/
-            chunk-results/
+          path: report/
           retention-days: 30
 
       - name: Deploy to GitHub Pages (Optional)
