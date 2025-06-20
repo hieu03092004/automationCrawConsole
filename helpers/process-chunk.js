@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { crawConsoleALLBrowser, getAccumulatedLogs } = require('../craw');
+const { crawConsoleALLBrowser } = require('../craw');
 const { nanoid } = require('nanoid');
 
 const timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -34,18 +34,20 @@ async function processChunk(chunkNumber) {
     console.log(`Processing chunk ${chunkNumber} with ${urls.length} URLs`);
 
     const itemsObject = {};
+    const chunkWideLogs = {};
     const startTime = Date.now();
 
     for (const [i, url] of urls.entries()) {
       console.log(`[${i + 1}/${urls.length}][check-console]: ${url}`);
       
       try {
-        const { consoles } = await try2pass(
+        const { consoles, collectedLogs } = await try2pass(
           () => crawConsoleALLBrowser({ url })
         );
         itemsObject[url] = consoles;
         
-        // Delay giữa các request để tránh overload
+        Object.assign(chunkWideLogs, collectedLogs);
+
         await timeout(2000);
       } catch (error) {
         console.error(`Error processing ${url}: ${error.message}`);
@@ -80,10 +82,9 @@ async function processChunk(chunkNumber) {
     const resultFile = path.join(resultsDir, `chunk-${chunkNumber}-result.json`);
     fs.writeFileSync(resultFile, JSON.stringify(chunkResult, null, 2));
 
-    // Lấy tất cả log đã thu thập trong chunk này và ghi ra file
-    const accumulatedLogs = getAccumulatedLogs();
+    // Ghi tất cả log đã được tổng hợp hợp lệ của chunk ra file
     const chunkHashDataLogsPath = path.join(resultsDir, `chunk-${chunkNumber}-hashDataLogs.json`);
-    fs.writeFileSync(chunkHashDataLogsPath, JSON.stringify(accumulatedLogs, null, 2));
+    fs.writeFileSync(chunkHashDataLogsPath, JSON.stringify({ hash: chunkWideLogs }, null, 2));
     console.log(`Saved chunk hashDataLogs to ${chunkHashDataLogsPath}`);
 
     console.log(`Chunk ${chunkNumber} completed in ${processingTime}s`);

@@ -3,8 +3,8 @@ const { nanoid } = require('nanoid');
 const fs = require('fs');
 const path = require('path');
 
-// Khai báo allLogsMap ở scope toàn cục
-const allLogsMap = new Map(); // key: nanoid, value: log message
+// KHÔNG CÒN BIẾN TOÀN CỤC (GLOBAL VARIABLE)
+// const allLogsMap = new Map(); 
 
 const BROWSER_OPTION = { 
   chromium: playwright.chromium,
@@ -12,13 +12,13 @@ const BROWSER_OPTION = {
   webkit: playwright.webkit
 };
 
-function getOrCreateLogKey(msg) {
-  for (const [key, value] of allLogsMap.entries()) {
+// Hàm này giờ sẽ làm việc trên một map được truyền vào
+function getOrCreateLogKey(msg, logMap) {
+  for (const [key, value] of logMap.entries()) {
     if (value === msg) return key;
   }
-  // Nếu chưa có, tạo mới
   const key = nanoid();
-  allLogsMap.set(key, msg);
+  logMap.set(key, msg);
   return key;
 }
 
@@ -28,7 +28,6 @@ function parseURL(urlString) {
     const username = urlObject.username;
     const password = urlObject.password;
 
-    // Xây dựng lại URL không chứa thông tin đăng nhập
     urlObject.username = '';
     urlObject.password = '';
     
@@ -38,12 +37,12 @@ function parseURL(urlString) {
       password: decodeURIComponent(password),
     };
   } catch (e) {
-    // Nếu phân tích URL thất bại, giả định đó là URL đơn giản không có thông tin xác thực
     return { url: urlString, username: '', password: '' };
   }
 }
 
-const crawConsoleBrowser = async (crawParams = {}) => {
+// Hàm này giờ sẽ làm việc trên một map được truyền vào
+const crawConsoleBrowser = async (crawParams = {}, logMap) => {
   let { url, browser } = crawParams;
   if (!url || !browser) {
     throw new Error('Invalid payload input');
@@ -58,7 +57,8 @@ const crawConsoleBrowser = async (crawParams = {}) => {
     headless: true,
     args: browser === 'webkit' ? [] : ['--no-sandbox', '--disable-setuid-sandbox']
   });
-  console.log(`[Start browser ${browser} - ${browserInstance.version()}] success`);
+  // Tắt log này để đỡ nhiễu
+  // console.log(`[Start browser ${browser} - ${browserInstance.version()}] success`);
 
   const contextParams = { ignoreHTTPSErrors: true };
   const itemURL = parseURL(url);
@@ -71,7 +71,6 @@ const crawConsoleBrowser = async (crawParams = {}) => {
   const context = await browserInstance.newContext(contextParams);
   const page = await context.newPage();
   
-  // Logic thu thập log vẫn giữ nguyên
   const logsMap = {
     info: new Set(),
     warn: new Set(),
@@ -81,7 +80,7 @@ const crawConsoleBrowser = async (crawParams = {}) => {
   page.on('console', msg => {
     const type = msg.type();
     const text = msg.text();
-    const logKey = getOrCreateLogKey(text.trim());
+    const logKey = getOrCreateLogKey(text.trim(), logMap); // Sử dụng logMap được truyền vào
     switch(type) {
       case 'error':
         logsMap.error.add(logKey);
@@ -97,23 +96,20 @@ const crawConsoleBrowser = async (crawParams = {}) => {
   try {
     await page.goto(url, { waitUntil: 'load', timeout: 30000 });
   } catch(error) {
-    console.error(`Error on first goto for ${url}: ${error.message}`);
+    // Không log lỗi ở đây để tránh nhiễu, vì đã có try2pass xử lý
   }
   
-  // Cố gắng click vào các banner cookies
   await page.evaluate(() => {
     document.querySelector('#onetrust-accept-btn-handler')?.click();
     document?.querySelector("#usercentrics-root")?.shadowRoot?.querySelector("[data-testid='uc-accept-all-button']")?.click();
   });
 
-  // Tải lại trang sau khi đã xử lý cookies
   try {
     await page.goto(url, { waitUntil: 'load', timeout: 30000 });
   } catch (error) {
-    console.error(`Error on second goto for ${url}: ${error.message}`);
+    // Không log lỗi ở đây
   }
 
-  // Cuộn trang bằng mouse wheel để mô phỏng người dùng
   if (page.viewportSize()) {
     const viewportHeight = page.viewportSize().height;
     const stepHeight = Math.round(viewportHeight / 3);
@@ -130,20 +126,17 @@ const crawConsoleBrowser = async (crawParams = {}) => {
     }
   }
   
-  // Chờ thêm để bắt các log có thể xuất hiện muộn
   await page.waitForTimeout(5000);
 
   await browserInstance.close();
-  console.log(`[Stop browser ${browser}] success`);
+  // console.log(`[Stop browser ${browser}] success`);
 
-  // Chuyển đổi Set thành mảng key, logic này giữ nguyên
   const logsObject = {
     info: Array.from(logsMap.info),
     warn: Array.from(logsMap.warn),
     error: Array.from(logsMap.error)
   };
 
-  // Cấu trúc trả về giữ nguyên
   return { 
     [browser]: {
       logs: logsObject
@@ -152,26 +145,28 @@ const crawConsoleBrowser = async (crawParams = {}) => {
 };
 
 const crawConsoleALLBrowser = async ({ url }) => {
+  const localLogMapForThisUrl = new Map(); // Map cục bộ cho lần crawl này
   const consoles = {};
   
   for (const browser in BROWSER_OPTION) {
     if (Object.prototype.hasOwnProperty.call(BROWSER_OPTION, browser)) {
-      const data = await crawConsoleBrowser({ url, browser });
+      const data = await crawConsoleBrowser({ url, browser }, localLogMapForThisUrl);
       consoles[browser] = data[browser];
     }
   }
-  return { consoles };
+
+  // Chuyển đổi map thành object {key: value} để trả về
+  const collectedLogs = {};
+  for (const [key, value] of localLogMapForThisUrl.entries()) {
+    collectedLogs[key] = value;
+  }
+  
+  return { consoles, collectedLogs }; // Trả về cả kết quả và log đã thu thập
 };
 
-function getAccumulatedLogs() {
-  const hash = {};
-  for (const [key, value] of allLogsMap.entries()) {
-    hash[key] = value;
-  }
-  return { hash };
-}
+// Xóa hàm không còn sử dụng
+// function getAccumulatedLogs() { ... }
 
 module.exports = {
   crawConsoleALLBrowser,
-  getAccumulatedLogs
 };
