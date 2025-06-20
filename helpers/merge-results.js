@@ -29,7 +29,7 @@ function getInput(file) {
 async function mergeResults() {
   try {
     // Đọc metadata để biết có bao nhiêu chunk
-    const metadataFile = path.join(__dirname, '..', 'chunks', 'metadata.json');
+    const metadataFile = path.join(__dirname, '..', 'chunk-results', 'metadata.json');
     if (!fs.existsSync(metadataFile)) {
       throw new Error('Metadata file not found. Please run split-urls.js first.');
     }
@@ -140,7 +140,7 @@ async function mergeResults() {
 // Hàm merge hashDataLogs từ tất cả các chunk
 async function mergeHashDataLogsAndRemapLogs(chunkResults, mergedItemsObject) {
   try {
-    const metadataFile = path.join(__dirname, '..', 'chunks', 'metadata.json');
+    const metadataFile = path.join(__dirname, '..', 'chunk-results', 'metadata.json');
     const metadata = JSON.parse(fs.readFileSync(metadataFile, 'utf8'));
     
     // Map value -> key duy nhất (ưu tiên key đầu tiên gặp)

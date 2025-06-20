@@ -1,0 +1,57 @@
+{
+  "totalUrls": 20,
+  "numberOfChunks": 10,
+  "chunkSize": 2,
+  "chunks": [
+    {
+      "chunkNumber": 1,
+      "urlCount": 2,
+      "filename": "chunk-1.json"
+    },
+    {
+      "chunkNumber": 2,
+      "urlCount": 2,
+      "filename": "chunk-2.json"
+    },
+    {
+      "chunkNumber": 3,
+      "urlCount": 2,
+      "filename": "chunk-3.json"
+    },
+    {
+      "chunkNumber": 4,
+      "urlCount": 2,
+      "filename": "chunk-4.json"
+    },
+    {
+      "chunkNumber": 5,
+      "urlCount": 2,
+      "filename": "chunk-5.json"
+    },
+    {
+      "chunkNumber": 6,
+      "urlCount": 2,
+      "filename": "chunk-6.json"
+    },
+    {
+      "chunkNumber": 7,
+      "urlCount": 2,
+      "filename": "chunk-7.json"
+    },
+    {
+      "chunkNumber": 8,
+      "urlCount": 2,
+      "filename": "chunk-8.json"
+    },
+    {
+      "chunkNumber": 9,
+      "urlCount": 2,
+      "filename": "chunk-9.json"
+    },
+    {
+      "chunkNumber": 10,
+      "urlCount": 2,
+      "filename": "chunk-10.json"
+    }
+  ]
+}

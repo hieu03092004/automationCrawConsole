@@ -58,7 +58,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: url-chunks
-          path: chunks/
+          path: chunks/chunk-*.json
+          retention-days: 1
+
+      - name: Upload metadata artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: metadata
+          path: chunks/metadata.json
           retention-days: 1
 
   # Job 2: Process chunks in parallel
@@ -136,8 +143,8 @@ jobs:
       - name: Download chunks metadata
         uses: actions/download-artifact@v4
         with:
-          name: url-chunks
-          path: chunks/
+          name: metadata
+          path: chunk-results/
 
       - name: Download all chunk results
         uses: actions/download-artifact@v4
@@ -177,9 +184,6 @@ jobs:
       - name: Merge results
         run: npm run merge
 
-      - name: Organize chunk results
-        run: npm run organize-chunks
-
       - name: Upload merged hashDataLogs.json
         uses: actions/upload-artifact@v4
         with:
@@ -194,7 +198,6 @@ jobs:
           path: |
             report/
             chunk-results/
-            chunks/metadata.json
           retention-days: 30
 
       - name: Generate summary
@@ -257,7 +260,6 @@ jobs:
           path: |
             report/
             chunk-results/
-            chunks/metadata.json
           retention-days: 30
 
       - name: Deploy to GitHub Pages (Optional)
