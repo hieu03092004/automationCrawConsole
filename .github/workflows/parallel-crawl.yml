@@ -160,27 +160,6 @@ jobs:
           merge-multiple: true
           path: chunk-results/
 
-      - name: Merge all chunk hashDataLogs into hashDataLogs.json
-        run: |
-          node <<'EOF'
-          const fs = require('fs');
-          const path = require('path');
-          const resultsDir = path.join(__dirname, 'chunk-results');
-          const hashFiles = fs.readdirSync(resultsDir).filter(f => f.endsWith('-hashDataLogs.json'));
-          const merged = { hash: {} };
-          for (const file of hashFiles) {
-            const data = JSON.parse(fs.readFileSync(path.join(resultsDir, file), 'utf8'));
-            if (data.hash) {
-              for (const [k, v] of Object.entries(data.hash)) {
-                if (!Object.values(merged.hash).includes(v)) { // tránh duplicate value
-                  merged.hash[k] = v;
-                }
-              }
-            }
-          }
-          fs.writeFileSync(path.join(__dirname, 'hashDataLogs.json'), JSON.stringify(merged, null, 2));
-          EOF
-
       - name: Merge results
         run: npm run merge
 

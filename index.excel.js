@@ -4,7 +4,7 @@ const { hideBin } = require('yargs/helpers');
 const fs = require('fs');
 const xlsx = require('xlsx');
 const path = require('path');
-const { crawConsoleALLBrowser } = require('./craw');
+const { crawConsoleALLBrowser, getAccumulatedLogs } = require('./craw');
 require('dotenv').config();
 
 // Cấu hình yargs
@@ -151,5 +151,11 @@ const joinUrl = (hostname = '', pathname = '') => {
   
     console.log('Creating report/project.json file')
     await fs.promises.writeFile('./report/project.json', JSON.stringify(reportData, null, 2))
+
+    // Lấy tất cả log đã thu thập và ghi ra file hashDataLogs.json
+    console.log('Creating hashDataLogs.json file');
+    const accumulatedLogs = getAccumulatedLogs();
+    await fs.promises.writeFile('./hashDataLogs.json', JSON.stringify(accumulatedLogs, null, 2));
+    console.log('hashDataLogs.json created successfully');
   }
 main();

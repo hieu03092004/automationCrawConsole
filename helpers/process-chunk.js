@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { crawConsoleALLBrowser } = require('../craw');
+const { crawConsoleALLBrowser, getAccumulatedLogs } = require('../craw');
 const { nanoid } = require('nanoid');
 
 const timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -80,25 +80,11 @@ async function processChunk(chunkNumber) {
     const resultFile = path.join(resultsDir, `chunk-${chunkNumber}-result.json`);
     fs.writeFileSync(resultFile, JSON.stringify(chunkResult, null, 2));
 
-    // Đảm bảo tất cả log keys được lưu vào hashDataLogs.json chính
-    const hashDataLogsPath = path.join(__dirname, '..', 'hashDataLogs.json');
-    if (fs.existsSync(hashDataLogsPath)) {
-      // Save tất cả logs đã tích lũy trong chunk này
-      const { saveAllLogs } = require('../craw');
-      if (typeof saveAllLogs === 'function') {
-        try {
-          await saveAllLogs();
-          console.log(`All logs from chunk ${chunkNumber} saved to main hashDataLogs.json`);
-        } catch (error) {
-          console.warn(`Warning: Could not save logs from chunk ${chunkNumber}: ${error.message}`);
-        }
-      }
-      
-      // Copy file đã cập nhật cho chunk này
-      const chunkHashDataLogsPath = path.join(resultsDir, `chunk-${chunkNumber}-hashDataLogs.json`);
-      fs.copyFileSync(hashDataLogsPath, chunkHashDataLogsPath);
-      console.log(`Saved updated chunk hashDataLogs to ${chunkHashDataLogsPath}`);
-    }
+    // Lấy tất cả log đã thu thập trong chunk này và ghi ra file
+    const accumulatedLogs = getAccumulatedLogs();
+    const chunkHashDataLogsPath = path.join(resultsDir, `chunk-${chunkNumber}-hashDataLogs.json`);
+    fs.writeFileSync(chunkHashDataLogsPath, JSON.stringify(accumulatedLogs, null, 2));
+    console.log(`Saved chunk hashDataLogs to ${chunkHashDataLogsPath}`);
 
     console.log(`Chunk ${chunkNumber} completed in ${processingTime}s`);
     console.log(`Result saved to ${resultFile}`);
